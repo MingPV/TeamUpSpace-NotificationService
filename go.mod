@@ -6,17 +6,17 @@ require (
 	github.com/gofiber/contrib/swagger v1.3.0
 	github.com/gofiber/fiber/v2 v2.52.8
 	github.com/golang-jwt/jwt/v5 v5.2.2
-	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.10.0
 	github.com/swaggo/swag v1.16.4
-	golang.org/x/crypto v0.38.0
 	google.golang.org/protobuf v1.36.5
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.26.1
 )
 
 require (
+	github.com/google/uuid v1.6.0 // indirect
+	golang.org/x/crypto v0.38.0 // indirect
 	golang.org/x/net v0.40.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250218202821-56aae31c358a // indirect
 )

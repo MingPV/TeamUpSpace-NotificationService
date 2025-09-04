@@ -55,5 +55,9 @@ func SetupDependencies(env string) (*gorm.DB, *config.Config, error) {
 		return nil, nil, err
 	}
 
+	if err := db.AutoMigrate(&entities.Notification{}); err != nil {
+		return nil, nil, err
+	}
+
 	return db, cfg, nil
 }

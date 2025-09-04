@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package notification;
+
+option go_package = "github.com/MingPV/NotificationService/proto/notificationpb";
+
+message Notification {
+  int32 id = 1;
+  double total = 2;
+}
+
+message CreateNotificationRequest {
+  double total = 1;
+}
+
+message CreateNotificationResponse {
+  Notification notification = 1;
+}
+
+message FindNotificationByIDRequest {
+  int32 id = 1;
+}
+
+message FindNotificationByIDResponse {
+  Notification notification = 1;
+}
+
+message FindAllNotificationsRequest {}
+
+message FindAllNotificationsResponse {
+  repeated Notification notifications = 1;
+}
+
+message PatchNotificationRequest {
+  int32 id = 1;
+  double total = 2;
+}
+
+message PatchNotificationResponse {
+  Notification notification = 1;
+}
+
+message DeleteNotificationRequest {
+  int32 id = 1;
+}
+
+message DeleteNotificationResponse {
+  string message = 1;
+}
+
+service NotificationService {
+  rpc CreateNotification(CreateNotificationRequest) returns (CreateNotificationResponse);
+  rpc FindNotificationByID(FindNotificationByIDRequest) returns (FindNotificationByIDResponse);
+  rpc FindAllNotifications(FindAllNotificationsRequest) returns (FindAllNotificationsResponse);
+  rpc PatchNotification(PatchNotificationRequest) returns (PatchNotificationResponse);
+  rpc DeleteNotification(DeleteNotificationRequest) returns (DeleteNotificationResponse);
+}
