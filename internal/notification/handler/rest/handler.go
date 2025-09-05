@@ -3,8 +3,6 @@ package rest
 import (
 	"strconv"
 
-	"github.com/MingPV/NotificationService/pkg/apperror"
-
 	"github.com/MingPV/NotificationService/internal/entities"
 	"github.com/MingPV/NotificationService/internal/notification/dto"
 	"github.com/MingPV/NotificationService/internal/notification/usecase"
@@ -34,7 +32,7 @@ func (h *HttpNotificationHandler) CreateNotification(c *fiber.Ctx) error {
 		return responses.ErrorWithMessage(c, err, "invalid request")
 	}
 
-	notification := &entities.Notification{SendTo: req.SendTo,Type: req.Type,Message: req.Message}
+	notification := &entities.Notification{SendTo: req.SendTo, Type: req.Type, Message: req.Message}
 	if err := h.notificationUseCase.CreateNotification(notification); err != nil {
 		return responses.Error(c, err)
 	}
@@ -100,7 +98,7 @@ func (h *HttpNotificationHandler) PatchNotification(c *fiber.Ctx) error {
 		return responses.ErrorWithMessage(c, err, "invalid request")
 	}
 
-	notification := &entities.Notification{SendTo: req.SendTo,Type: req.Type,Message: req.Message}
+	notification := &entities.Notification{SendTo: req.SendTo, Type: req.Type, Message: req.Message}
 
 	msg, err := validatePatchNotification(notification)
 	if err != nil {
@@ -139,8 +137,8 @@ func (h *HttpNotificationHandler) DeleteNotification(c *fiber.Ctx) error {
 func validatePatchNotification(notification *entities.Notification) (string, error) {
 
 	if notification.SendTo == "" || notification.Message == "" {
-        return "send_to and message must not be empty", apperror.ErrInvalidData
-    }
+		// return "send_to and message must not be empty", apperror.ErrInvalidData
+	}
 
-    return "", nil
+	return "", nil
 }
