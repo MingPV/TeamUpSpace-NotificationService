@@ -135,6 +135,6 @@ func (h *HttpNotificationHandler) DeleteNotification(c *fiber.Ctx) error {
 }
 
 func validatePatchNotification(notification *entities.Notification) (string, error) {
-	
+
 	return "", nil
 }
