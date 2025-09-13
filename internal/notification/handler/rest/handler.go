@@ -135,10 +135,6 @@ func (h *HttpNotificationHandler) DeleteNotification(c *fiber.Ctx) error {
 }
 
 func validatePatchNotification(notification *entities.Notification) (string, error) {
-
-	if notification.SendTo == "" || notification.Message == "" {
-		// return "send_to and message must not be empty", apperror.ErrInvalidData
-	}
-
+	
 	return "", nil
 }

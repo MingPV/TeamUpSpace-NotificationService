@@ -1,10 +1,13 @@
 package dto
 
-import "time"
+import (
+    "time"
+    "github.com/google/uuid"
+)
 
 type NotificationResponse struct {
 	ID    uint    `json:"id"`
-	SendTo    string    `json:"send_to"`
+	SendTo    uuid.UUID `gorm:"primaryKey;autoIncrement" json:"user_id"`
     Type      string    `json:"type"`
     Message   string    `json:"message"`
     CreatedAt time.Time `json:"created_at"`
