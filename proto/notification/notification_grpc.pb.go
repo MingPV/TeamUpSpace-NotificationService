@@ -19,11 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	NotificationService_CreateNotification_FullMethodName   = "/notification.NotificationService/CreateNotification"
-	NotificationService_FindNotificationByID_FullMethodName = "/notification.NotificationService/FindNotificationByID"
-	NotificationService_FindAllNotifications_FullMethodName = "/notification.NotificationService/FindAllNotifications"
-	NotificationService_PatchNotification_FullMethodName    = "/notification.NotificationService/PatchNotification"
-	NotificationService_DeleteNotification_FullMethodName   = "/notification.NotificationService/DeleteNotification"
+	NotificationService_CreateNotification_FullMethodName        = "/notification.NotificationService/CreateNotification"
+	NotificationService_FindNotificationByID_FullMethodName      = "/notification.NotificationService/FindNotificationByID"
+	NotificationService_FindAllNotifications_FullMethodName      = "/notification.NotificationService/FindAllNotifications"
+	NotificationService_FindNotificationsByUserID_FullMethodName = "/notification.NotificationService/FindNotificationsByUserID"
+	NotificationService_MarkAsReadByUserID_FullMethodName        = "/notification.NotificationService/MarkAsReadByUserID"
+	NotificationService_PatchNotification_FullMethodName         = "/notification.NotificationService/PatchNotification"
+	NotificationService_DeleteNotification_FullMethodName        = "/notification.NotificationService/DeleteNotification"
 )
 
 // NotificationServiceClient is the client API for NotificationService service.
@@ -33,6 +35,8 @@ type NotificationServiceClient interface {
 	CreateNotification(ctx context.Context, in *CreateNotificationRequest, opts ...grpc.CallOption) (*CreateNotificationResponse, error)
 	FindNotificationByID(ctx context.Context, in *FindNotificationByIDRequest, opts ...grpc.CallOption) (*FindNotificationByIDResponse, error)
 	FindAllNotifications(ctx context.Context, in *FindAllNotificationsRequest, opts ...grpc.CallOption) (*FindAllNotificationsResponse, error)
+	FindNotificationsByUserID(ctx context.Context, in *FindNotificationsByUserIDRequest, opts ...grpc.CallOption) (*FindNotificationsByUserIDResponse, error)
+	MarkAsReadByUserID(ctx context.Context, in *MarkAsReadByUserIDRequest, opts ...grpc.CallOption) (*MarkAsReadByUserIDResponse, error)
 	PatchNotification(ctx context.Context, in *PatchNotificationRequest, opts ...grpc.CallOption) (*PatchNotificationResponse, error)
 	DeleteNotification(ctx context.Context, in *DeleteNotificationRequest, opts ...grpc.CallOption) (*DeleteNotificationResponse, error)
 }
@@ -75,6 +79,26 @@ func (c *notificationServiceClient) FindAllNotifications(ctx context.Context, in
 	return out, nil
 }
 
+func (c *notificationServiceClient) FindNotificationsByUserID(ctx context.Context, in *FindNotificationsByUserIDRequest, opts ...grpc.CallOption) (*FindNotificationsByUserIDResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FindNotificationsByUserIDResponse)
+	err := c.cc.Invoke(ctx, NotificationService_FindNotificationsByUserID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *notificationServiceClient) MarkAsReadByUserID(ctx context.Context, in *MarkAsReadByUserIDRequest, opts ...grpc.CallOption) (*MarkAsReadByUserIDResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MarkAsReadByUserIDResponse)
+	err := c.cc.Invoke(ctx, NotificationService_MarkAsReadByUserID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *notificationServiceClient) PatchNotification(ctx context.Context, in *PatchNotificationRequest, opts ...grpc.CallOption) (*PatchNotificationResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PatchNotificationResponse)
@@ -102,6 +126,8 @@ type NotificationServiceServer interface {
 	CreateNotification(context.Context, *CreateNotificationRequest) (*CreateNotificationResponse, error)
 	FindNotificationByID(context.Context, *FindNotificationByIDRequest) (*FindNotificationByIDResponse, error)
 	FindAllNotifications(context.Context, *FindAllNotificationsRequest) (*FindAllNotificationsResponse, error)
+	FindNotificationsByUserID(context.Context, *FindNotificationsByUserIDRequest) (*FindNotificationsByUserIDResponse, error)
+	MarkAsReadByUserID(context.Context, *MarkAsReadByUserIDRequest) (*MarkAsReadByUserIDResponse, error)
 	PatchNotification(context.Context, *PatchNotificationRequest) (*PatchNotificationResponse, error)
 	DeleteNotification(context.Context, *DeleteNotificationRequest) (*DeleteNotificationResponse, error)
 	mustEmbedUnimplementedNotificationServiceServer()
@@ -122,6 +148,12 @@ func (UnimplementedNotificationServiceServer) FindNotificationByID(context.Conte
 }
 func (UnimplementedNotificationServiceServer) FindAllNotifications(context.Context, *FindAllNotificationsRequest) (*FindAllNotificationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindAllNotifications not implemented")
+}
+func (UnimplementedNotificationServiceServer) FindNotificationsByUserID(context.Context, *FindNotificationsByUserIDRequest) (*FindNotificationsByUserIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindNotificationsByUserID not implemented")
+}
+func (UnimplementedNotificationServiceServer) MarkAsReadByUserID(context.Context, *MarkAsReadByUserIDRequest) (*MarkAsReadByUserIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MarkAsReadByUserID not implemented")
 }
 func (UnimplementedNotificationServiceServer) PatchNotification(context.Context, *PatchNotificationRequest) (*PatchNotificationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PatchNotification not implemented")
@@ -204,6 +236,42 @@ func _NotificationService_FindAllNotifications_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NotificationService_FindNotificationsByUserID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindNotificationsByUserIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotificationServiceServer).FindNotificationsByUserID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NotificationService_FindNotificationsByUserID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotificationServiceServer).FindNotificationsByUserID(ctx, req.(*FindNotificationsByUserIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _NotificationService_MarkAsReadByUserID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MarkAsReadByUserIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotificationServiceServer).MarkAsReadByUserID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NotificationService_MarkAsReadByUserID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotificationServiceServer).MarkAsReadByUserID(ctx, req.(*MarkAsReadByUserIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _NotificationService_PatchNotification_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PatchNotificationRequest)
 	if err := dec(in); err != nil {
@@ -258,6 +326,14 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FindAllNotifications",
 			Handler:    _NotificationService_FindAllNotifications_Handler,
+		},
+		{
+			MethodName: "FindNotificationsByUserID",
+			Handler:    _NotificationService_FindNotificationsByUserID_Handler,
+		},
+		{
+			MethodName: "MarkAsReadByUserID",
+			Handler:    _NotificationService_MarkAsReadByUserID_Handler,
 		},
 		{
 			MethodName: "PatchNotification",

@@ -59,3 +59,16 @@ func (r *GormNotificationRepository) Delete(id int) error {
 	}
 	return nil
 }
+
+func (r *GormNotificationRepository) FindByUserID(userID string) ([]*entities.Notification, error) {
+	var notificationValues []entities.Notification
+	if err := r.db.Where("send_to = ?", userID).Find(&notificationValues).Error; err != nil {
+		return nil, err
+	}
+
+	notifications := make([]*entities.Notification, len(notificationValues))
+	for i := range notificationValues {
+		notifications[i] = &notificationValues[i]
+	}
+	return notifications, nil
+}

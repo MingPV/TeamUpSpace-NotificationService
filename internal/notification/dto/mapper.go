@@ -4,12 +4,13 @@ import "github.com/MingPV/NotificationService/internal/entities"
 
 func ToNotificationResponse(notification *entities.Notification) *NotificationResponse {
 	return &NotificationResponse{
-		ID:    		notification.ID,
-		SendTo: 	notification.SendTo,
-		Type: 		notification.Type,
-		Message: 	notification.Message,
-		CreatedAt: 	notification.CreatedAt,
-		UpdatedAt: 	notification.UpdatedAt,
+		ID:        notification.ID,
+		SendTo:    notification.SendTo,
+		Type:      notification.Type,
+		Message:   notification.Message,
+		IsRead:    notification.IsRead,
+		CreatedAt: notification.CreatedAt,
+		UpdatedAt: notification.UpdatedAt,
 	}
 }
 

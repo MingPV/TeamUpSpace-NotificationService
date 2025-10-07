@@ -11,6 +11,7 @@ message Notification {
   string send_to = 2;
   string type = 3;
   string message = 4;
+  bool is_read = 7;
   google.protobuf.Timestamp created_at = 5;
   google.protobuf.Timestamp updated_at = 6;
 }
@@ -29,8 +30,24 @@ message FindNotificationByIDRequest {
   int32 id = 1;
 }
 
+message FindNotificationsByUserIDRequest {
+  string user_id = 1;
+}
+
+message MarkAsReadByUserIDRequest {
+  string user_id = 1;
+}
+
 message FindNotificationByIDResponse {
   Notification notification = 1;
+}
+
+message FindNotificationsByUserIDResponse {
+  repeated Notification notifications = 1;
+}
+
+message MarkAsReadByUserIDResponse {
+  string message = 1;
 }
 
 message FindAllNotificationsRequest {}
@@ -43,6 +60,7 @@ message PatchNotificationRequest {
   int32 id = 1;
   string send_to = 2;
   string type = 3;
+  bool is_read = 7;
   string message = 4;
 }
 
@@ -62,6 +80,8 @@ service NotificationService {
   rpc CreateNotification(CreateNotificationRequest) returns (CreateNotificationResponse);
   rpc FindNotificationByID(FindNotificationByIDRequest) returns (FindNotificationByIDResponse);
   rpc FindAllNotifications(FindAllNotificationsRequest) returns (FindAllNotificationsResponse);
+  rpc FindNotificationsByUserID(FindNotificationsByUserIDRequest) returns (FindNotificationsByUserIDResponse);
+  rpc MarkAsReadByUserID(MarkAsReadByUserIDRequest) returns (MarkAsReadByUserIDResponse);
   rpc PatchNotification(PatchNotificationRequest) returns (PatchNotificationResponse);
   rpc DeleteNotification(DeleteNotificationRequest) returns (DeleteNotificationResponse);
 }

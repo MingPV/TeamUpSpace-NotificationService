@@ -1,9 +1,13 @@
 package app
 
 import (
+	"context"
 	"log"
 
+	notificationRepository "github.com/MingPV/NotificationService/internal/notification/repository"
+	notificationUseCase "github.com/MingPV/NotificationService/internal/notification/usecase"
 	"github.com/MingPV/NotificationService/pkg/database"
+	"github.com/MingPV/NotificationService/pkg/mq"
 	"github.com/MingPV/NotificationService/utils"
 )
 
@@ -14,6 +18,13 @@ func Start() {
 	if err != nil {
 		log.Fatalf("❌ Failed to setup dependencies: %v", err)
 	}
+
+	// Setup UseCases
+	notifRepo := notificationRepository.NewGormNotificationRepository(db)
+	notifService := notificationUseCase.NewNotificationService(notifRepo)
+
+	// Start RabbitMQ consumer
+	go mq.StartNotificationConsumer(context.Background(), notifService)
 
 	// Setup REST server
 	restApp, err := SetupRestServer(db, cfg)

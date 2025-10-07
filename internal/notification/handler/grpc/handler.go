@@ -1,15 +1,15 @@
 package grpc
 
 import (
-    "context"
+	"context"
 
-    "github.com/MingPV/NotificationService/internal/entities"
-    "github.com/MingPV/NotificationService/internal/notification/usecase"
-    "github.com/MingPV/NotificationService/pkg/apperror"
-    notificationpb "github.com/MingPV/NotificationService/proto/notification"
-    "github.com/google/uuid"
-    "google.golang.org/grpc/status"
-    "google.golang.org/protobuf/types/known/timestamppb"
+	"github.com/MingPV/NotificationService/internal/entities"
+	"github.com/MingPV/NotificationService/internal/notification/usecase"
+	"github.com/MingPV/NotificationService/pkg/apperror"
+	notificationpb "github.com/MingPV/NotificationService/proto/notification"
+	"github.com/google/uuid"
+	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type GrpcNotificationHandler struct {
@@ -27,6 +27,7 @@ func (h *GrpcNotificationHandler) CreateNotification(ctx context.Context, req *n
 		SendTo:  sendToUUID,
 		Type:    req.Type,
 		Message: req.Message,
+		IsRead:  false,
 	}
 
 	if err := h.notificationUseCase.CreateNotification(notif); err != nil {
@@ -63,6 +64,7 @@ func (h *GrpcNotificationHandler) PatchNotification(ctx context.Context, req *no
 		SendTo:  sendToUUID,
 		Type:    req.Type,
 		Message: req.Message,
+		IsRead:  req.IsRead,
 	}
 
 	updatedNotif, err := h.notificationUseCase.PatchNotification(int(req.Id), notif)
@@ -79,6 +81,27 @@ func (h *GrpcNotificationHandler) DeleteNotification(ctx context.Context, req *n
 	return &notificationpb.DeleteNotificationResponse{Message: "notification deleted"}, nil
 }
 
+func (h *GrpcNotificationHandler) FindNotificationsByUserID(ctx context.Context, req *notificationpb.FindNotificationsByUserIDRequest) (*notificationpb.FindNotificationsByUserIDResponse, error) {
+	notifs, err := h.notificationUseCase.FindNotificationsByUserID(req.UserId)
+	if err != nil {
+		return nil, status.Errorf(apperror.GRPCCode(err), "%s", err.Error())
+	}
+
+	var protoNotifs []*notificationpb.Notification
+	for _, n := range notifs {
+		protoNotifs = append(protoNotifs, toProtoNotification(n))
+	}
+
+	return &notificationpb.FindNotificationsByUserIDResponse{Notifications: protoNotifs}, nil
+}
+
+func (h *GrpcNotificationHandler) MarkAsReadByUserID(ctx context.Context, req *notificationpb.MarkAsReadByUserIDRequest) (*notificationpb.MarkAsReadByUserIDResponse, error) {
+	if err := h.notificationUseCase.MarkAsReadByUserID(req.UserId); err != nil {
+		return nil, status.Errorf(apperror.GRPCCode(err), "%s", err.Error())
+	}
+	return &notificationpb.MarkAsReadByUserIDResponse{Message: "all notifications marked as read"}, nil
+}
+
 // helper function convert entities.Notification to notificationpb.Notification
 func toProtoNotification(n *entities.Notification) *notificationpb.Notification {
 	return &notificationpb.Notification{
@@ -86,6 +109,7 @@ func toProtoNotification(n *entities.Notification) *notificationpb.Notification 
 		SendTo:    n.SendTo.String(),
 		Type:      n.Type,
 		Message:   n.Message,
+		IsRead:    n.IsRead,
 		CreatedAt: timestamppb.New(n.CreatedAt),
 		UpdatedAt: timestamppb.New(n.UpdatedAt),
 	}
